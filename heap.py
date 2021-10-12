@@ -58,18 +58,18 @@ class Heap:
       parent = self._parent(i)
   
   def peekMin(self):
-    return None if len(self.array) == 0 else self.array[0][0]
+    return None if len(self.array) == 0 else self.array[0]
 
   def extractMin(self):
     if len(self.array) == 1:
-      return self.array.pop()[0]
+      return self.array.pop()
 
     elif len(self.array) > 1:
-      minVal = self.array[0][0]
+      minVal, cost = self.array[0]
       last = self.array.pop()
       self.array[0] = last
       self._heapify(0)
-      return minVal
+      return (minVal, cost)
 
     else:
       return None
