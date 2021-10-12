@@ -117,14 +117,52 @@ def prims(g, root):
   return mst
 
 
+# Kruskal's algorithm for MST
+def kruskal(g):
+  nodeset_map = {}
+  nodes = set()
+  frontier = Heap()
+
+  for (source, target, cost) in g:
+    frontier.insert((source, target), cost)
+    nodes.add(source)
+    nodes.add(target)
+
+  for node in nodes:
+    nodeset_map[node] = node
+
+  mst = set()
+  num_nodesets = len(nodes)
+  while num_nodesets > 1 and frontier.size() > 0:
+    e, _ = frontier.extractMin()
+
+    # nodes are already part of the same forest; don't add edge
+    if nodeset_map[e[0]] == nodeset_map[e[1]]:
+      continue
+
+    else:
+      mst.add(e)
+      num_nodesets -= 1
+
+      # union by adding target nodeset to source nodeset
+      source_nodeset, target_nodeset = nodeset_map[e[0]], nodeset_map[e[1]]
+      for node in nodes:
+        if nodeset_map[node] == target_nodeset:
+          nodeset_map[node] = source_nodeset
+
+  return mst
+
+
 def testGraph():
   g = [(1,2,5),(1,3,5),(1,4,5),(2,3,1),(3,4,1)]
   path = dijkstra(g, 1, 3)
   paths = dijkstra(g, 1)
   mst = prims(g, 1)
+  mst2 = kruskal(g)
   print("path from 1 to 3:", path)
   print("paths from 1:", paths)
   print("MST with root 1", mst)
+  print("Kruskal's MST", mst2)
 
 if __name__ == '__main__':
   testGraph()
